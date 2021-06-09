@@ -1,0 +1,65 @@
+body {
+	position: absolute;
+	margin: 0px;
+	top:0px;
+	left:0px;
+	right:0px;
+	bottom:0px;
+	
+	background-color: black;
+	
+	-webkit-touch-callout: none; /* iOS Safari */
+	-webkit-user-select: none; /* Safari */
+	-khtml-user-select: none; /* Konqueror HTML */
+	-moz-user-select: none; /* Old versions of Firefox */
+	-ms-user-select: none; /* Internet Explorer/Edge */
+	user-select: none; /* Non-prefixed version, currently
+                                  supported by Chrome, Opera and Firefox */
+}
+
+#viewer {
+	position: absolute;
+	top: 0px;
+	left: 0px;
+	width: 100%;
+	height: 100%;
+	box-sizing: border-box;
+	opacity: 0;
+	transition: opacity 0.4s ease-out;
+}
+
+
+#texture {
+	position: absolute;
+	bottom: 10px;
+	left: 10px;
+	
+	max-width: 10%;
+	max-height: 10%;
+	
+	transition: 0.25s ease-in-out;
+}
+
+#texture:hover {
+	max-width: 33%;
+	max-height: 33%;
+}
+
+
+#fovSlider {
+	position: absolute;
+	bottom: 40px;
+	right: 10px;
+}
+
+#posSlider {
+	position: absolute;
+	bottom: 10px;
+	right: 10px;
+}
+
+#infoChecker {
+	position: absolute;
+	bottom: 10px;
+	right: 180px;
+}

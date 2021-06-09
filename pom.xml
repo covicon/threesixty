@@ -1,0 +1,211 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>io.github.covicon</groupId>
+	<artifactId>threesixty</artifactId>
+	<version>1.0</version>
+
+	<properties>
+		<!-- TEA VM-SPECIFIC PROPERTIES -->
+		<teavm.version>0.6.1</teavm.version>
+
+		<teavm.debug>false</teavm.debug>
+		<teavm.optimization>FULL</teavm.optimization>
+		<teavm.minifying>true</teavm.minifying>
+
+		<teavm.main>io.github.covicon.threesixty.PanoramicImageViewer</teavm.main>
+
+		<!-- PROJECT-SPECIFIC PROPERTIES -->
+		<threesixty.target>${project.artifactId}.js</threesixty.target>
+		<threesixty.script.file>${threesixty.target}</threesixty.script.file>
+		<threesixty.script.dir>${project.build.directory}/web/js</threesixty.script.dir>
+
+		<threesixty.html.dir>${project.build.directory}/web/html</threesixty.html.dir>
+
+		<java.version>1.8</java.version>
+		<maven.compiler.source>1.8</maven.compiler.source>
+		<maven.compiler.target>1.8</maven.compiler.target>
+
+		<encoding>UTF-8</encoding>
+		<project.build.sourceEncoding>${encoding}</project.build.sourceEncoding>
+		<project.reporting.outputEncoding>${encoding}</project.reporting.outputEncoding>
+		<project.resources.sourceEncoding>${encoding}</project.resources.sourceEncoding>
+	</properties>
+
+
+	<dependencies>
+		<dependency>
+			<groupId>org.teavm</groupId>
+			<artifactId>teavm-classlib</artifactId>
+			<version>${teavm.version}</version>
+			<scope>compile</scope>
+		</dependency>
+	</dependencies>
+
+	<build>
+		<sourceDirectory>src/java</sourceDirectory>
+		<resources>
+			<resource>
+				<directory>src/html</directory>
+				<includes>
+					<include>*.html</include>
+				</includes>
+				<filtering>true</filtering>
+				<targetPath>${threesixty.html.dir}</targetPath>
+			</resource>
+			<resource>
+				<directory>src/html</directory>
+				<excludes>
+					<exclude>*.html</exclude>
+				</excludes>
+				<filtering>false</filtering>
+				<targetPath>${threesixty.html.dir}</targetPath>
+			</resource>
+		</resources>
+
+
+		<plugins>
+
+			<plugin>
+				<groupId>org.teavm</groupId>
+				<artifactId>teavm-maven-plugin</artifactId>
+				<version>${teavm.version}</version>
+				<dependencies>
+					<!-- This dependency is required by TeaVM to emulate subset of Java 
+						class library -->
+					<dependency>
+						<groupId>org.teavm</groupId>
+						<artifactId>teavm-classlib</artifactId>
+						<version>${teavm.version}</version>
+					</dependency>
+				</dependencies>
+
+				<executions>
+					<execution>
+						<phase>package</phase>
+						<goals>
+							<goal>compile</goal>
+						</goals>
+						<configuration>
+							<targetDirectory>${threesixty.script.dir}</targetDirectory>
+							<targetFileName>${threesixty.target}.out</targetFileName>
+
+							<mainClass>${teavm.main}</mainClass>
+							<minifying>${teavm.minifying}</minifying>
+
+							<debugInformationGenerated>${teavm.debug}</debugInformationGenerated>
+							<sourceFilesCopied>${teavm.debug}</sourceFilesCopied>
+							<sourceMapsGenerated>${teavm.debug}</sourceMapsGenerated>
+							<sourceDirectory>${project.basedir}/src/java</sourceDirectory>
+
+							<incremental>false</incremental>
+							<optimizationLevel>${teavm.optimization}</optimizationLevel>
+
+							<classesToPreserve>${teavm.main}</classesToPreserve>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+
+			<plugin>
+				<artifactId>maven-antrun-plugin</artifactId>
+				<executions>
+					<execution>
+						<phase>package</phase>
+						<goals>
+							<goal>run</goal>
+						</goals>
+						<configuration>
+							<tasks>
+								<concat
+									destfile="${threesixty.script.dir}/${threesixty.target}.tmp"
+									fixlastline="yes" force="yes" append="yes">
+									<filelist dir="${threesixty.script.dir}"
+										files="${threesixty.target}.out" />
+									<footer>
+										main();
+									</footer>
+								</concat>
+								<move
+									file="${threesixty.script.dir}/${threesixty.target}.tmp"
+									tofile="${threesixty.script.dir}/${threesixty.target}" />
+
+								<!--
+								<move todir="${threesixty.html.dir}/src" >
+									<fileset dir="${threesixty.script.dir}/src" includes="**"/>
+								</move>
+								-->
+							</tasks>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+
+		</plugins>
+
+
+
+
+
+
+
+
+
+		<!--This plugin's configuration is used to store Eclipse m2e settings only. 
+			It has no influence on the Maven build itself. -->
+		<pluginManagement>
+			<plugins>
+				<plugin>
+					<groupId>org.eclipse.m2e</groupId>
+					<artifactId>lifecycle-mapping</artifactId>
+					<version>1.0.0</version>
+					<configuration>
+
+						<lifecycleMappingMetadata>
+							<pluginExecutions>
+								<pluginExecution>
+									<pluginExecutionFilter>
+										<groupId>org.teavm</groupId>
+										<artifactId>teavm-maven-plugin</artifactId>
+										<versionRange>[${teavm.version},)</versionRange>
+										<goals>
+											<goal>compile</goal>
+										</goals>
+									</pluginExecutionFilter>
+									<action>
+										<execute>
+											<runOnConfiguration>true</runOnConfiguration>
+											<runOnIncremental>true</runOnIncremental>
+										</execute>
+									</action>
+								</pluginExecution>
+
+								<pluginExecution>
+									<pluginExecutionFilter>
+										<groupId>org.apache.maven.plugins</groupId>
+										<artifactId>maven-antrun-plugin</artifactId>
+										<versionRange>[1,)</versionRange>
+										<goals>
+											<goal>run</goal>
+										</goals>
+									</pluginExecutionFilter>
+									<action>
+										<execute>
+											<runOnConfiguration>true</runOnConfiguration>
+											<runOnIncremental>true</runOnIncremental>
+										</execute>
+									</action>
+								</pluginExecution>
+
+							</pluginExecutions>
+						</lifecycleMappingMetadata>
+
+
+					</configuration>
+				</plugin>
+			</plugins>
+		</pluginManagement>
+
+	</build>
+</project>

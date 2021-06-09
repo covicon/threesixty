@@ -1,0 +1,26 @@
+<html>
+	<head>
+		<title>ThreeSixty</title>
+		<meta name="viewport" content="minimal-ui, width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+		<meta name="apple-mobile-web-app-capable" content="yes" />
+		<meta name="mobile-web-app-capable" content="yes" />
+		<meta name="apple-mobile-web-app-title" content="ThreeSixty">
+		
+		<link rel="stylesheet" href="index.css" />
+	</head>
+	
+	<body>
+		<canvas width="800" height="600" id="viewer"></canvas>
+	
+		<img id="texture" crossorigin="anonymous" />
+	
+		<input id="fovSlider" type="range" min="-1000" max="1000" value="0" />
+		<input id="posSlider" type="range" min="-1000" max="1000" value="0" />
+		<input id="infoChecker" type="checkbox" value="false" />
+		<div style="position: absolute; top: 10px; left: 10px; color: white; font-family: monospace;" id="status"></div>
+	
+		<!--<script charset="UTF-8" src="../js/${threesixty.script.file}"></script>-->
+		<script charset="UTF-8" src="../js/threesixty.js"></script>
+	
+	</body>
+</html>
